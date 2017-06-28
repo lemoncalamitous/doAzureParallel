@@ -83,7 +83,8 @@ generateClusterConfig <- function(fileName, ...){
       rPackages = list(
         cran = vector(),
         github = vector()
-      )
+      ),
+      commandLine = vector()
     )
 
     configJson <- jsonlite::toJSON(config, auto_unbox = TRUE, pretty = TRUE)
@@ -148,10 +149,16 @@ makeCluster <- function(clusterSetting = "cluster_settings.json", fullName = FAL
     packages <- c(installCranCommand, installGithubCommand)
   }
 
+  commandLine <- NULL
+  if(!is.null(pool$commandLine)){
+    commandLine <- pool$commandLine
+  }
+
   response <- .addPool(
     pool = pool,
     packages = packages,
-    resourceFiles = resourceFiles)
+    resourceFiles = resourceFiles,
+    commandLine = commandLine)
 
   pool <- getPool(pool$name)
 
