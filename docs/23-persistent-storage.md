@@ -57,12 +57,14 @@ foreach(i = 1:3, .options.azure = list(outputFiles = list(output))) %dopar% {
 }
 ```
 
-The tasks in a job may produce files that have the same name. Because each task runs in its own context, these files don't conflict on the node's file system. However, when you upload files from multiple tasks to a shared storage container, you'll need to disambiguate files with the same name or else the last task that gets executed will be the output file that the user will see.
+The tasks in a foreach may produce files that have the same name. Because each task runs in its own context, these files don't conflict on the node's file system. However, when you upload files from multiple tasks to a shared storage container, you'll need to disambiguate files with the same name or else the last task that gets executed will be the output file that the user will see.
 
 Our recommendation is users' supply file patterns with wildcards (*) in createOutputFile function. In order to differentiate results, we recommend appending a unique identification that can be assign to files in the foreach. For example, arguments in the foreach is a good way of identifying tasks outputs.
 
 The filePattern property in createOutputFile supports standard filesystem wildcards such as * (for non-recursive matches) and 
 ** (for recursive matches).
+
+Note: The foreach object always expects a value. We use NULL as a default value for the foreach to process the list of results. 
 
 ```R
 # Bad practice
