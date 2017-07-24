@@ -267,37 +267,40 @@ createOutputFile <- function(filePattern, url){
       uploadCondition = "taskCompletion"
     )
   )
-  
+
   # Parsing url to obtain container's virtual directory path
   azureDomain <- "blob.core.windows.net"
   parsedValue <- strsplit(url, azureDomain)[[1]]
-  
+
   accountName <- parsedValue[1]
   urlPath <- parsedValue[2]
-  
+
   baseUrl <- paste0(accountName, azureDomain)
   parsedUrlPath <- strsplit(urlPath, "?", fixed = TRUE)[[1]]
-  
+
   storageContainerPath <- parsedUrlPath[1]
   queryParameters <- parsedUrlPath[2]
   virtualDirectory <- strsplit(substring(storageContainerPath, 2, nchar(storageContainerPath)), "/", fixed = TRUE)
-  
+
   containerName <- virtualDirectory[[1]][1]
   containerUrl <- paste0(baseUrl, "/", containerName, "?", queryParameters)
-  
+
   # Verify directory has multiple directories
   if(length(virtualDirectory[[1]]) > 1){
     # Rebuilding output path for the file upload
     path <- ""
     for(i in 2:length(virtualDirectory[[1]])){
-      path <- paste0(path, virtualDirectory[[1]][i], "/")  
+      path <- paste0(path, virtualDirectory[[1]][i], "/")
     }
-    
+
     path <- substring(path, 1, nchar(path) - 1)
     output$destination$container$path <- path
   }
-  
+
   output$destination$container$containerUrl <- containerUrl
   output
 }
 
+getSasTokenUrl <- function(){
+
+}
