@@ -387,10 +387,10 @@ setVerbose <- function(value = FALSE){
 
   if (wait) {
     if (enableCloudCombine) {
-      rAzureBatch::waitForTasksToComplete(id, jobTimeout, progress = !is.null(obj$progress), tasks = nout + 1)
+      waitForTasksToComplete(id, jobTimeout, progress = !is.null(obj$progress), tasks = nout + 1)
     }
     else {
-      rAzureBatch::waitForTasksToComplete(id, jobTimeout, progress = !is.null(obj$progress), tasks = nout)
+      waitForTasksToComplete(id, jobTimeout, progress = !is.null(obj$progress), tasks = nout)
     }
 
     tasks <- rAzureBatch::listTask(id)$value
