@@ -393,6 +393,21 @@ setVerbose <- function(value = FALSE){
       rAzureBatch::waitForTasksToComplete(id, jobTimeout, progress = !is.null(obj$progress), tasks = nout)
     }
 
+    tasks <- rAzureBatch::listTask(id)$value
+
+    cat("\n")
+    jobSummary <- rAzureBatch::getJob(id)
+
+    cat(sprintf("Start Time: %s\n", jobSummary$executionInfo$startTime))
+    cat("\n")
+    cat(sprintf("End Time: %s\n", jobSummary$executionInfo$endTime))
+
+    for (i in 1:length(tasks)) {
+      if (tasks[[i]]$executionInfo$exitCode != 0) {
+        cat(sprintf("Task: %s - Exit Code: %s\n", tasks[[i]]$id, tasks[[i]]$executionInfo$exitCode))
+      }
+    }
+
     if (typeof(cloudCombine) == "list" && enableCloudCombine) {
       response <- rAzureBatch::downloadBlob(id, paste0("result/", id, "-merge-result.rds"), sasToken = sasToken, accountName = storageCredentials$name)
       tempFile <- tempfile("doAzureParallel", fileext = ".rds")
@@ -431,7 +446,7 @@ setVerbose <- function(value = FALSE){
       }
     }
 
-    rAzureBatch::deleteJob(id)
+    #rAzureBatch::deleteJob(id)
   }
   else{
     print("Because the 'wait' parameter is set to FALSE, the returned value is the job ID associated with the foreach loop. Use this returned value with getJobResults(job_id) to get the results when the foreach loop is completed in Azure")

@@ -85,9 +85,6 @@ result <- lapply(taskArgs, function(args){
 
 names(result) <- names(taskArgs)
 
-print("Result")
-result
-
 finalResult <- result
 if (!is.null(azbatchenv$gather)) {
   finalResult <- Reduce(azbatchenv$gather, result)
